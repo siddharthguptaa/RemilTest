@@ -6,6 +6,11 @@ using System.Web;
 namespace DTestAssign.Models
 {
     public class Test
+
+
+
+
+
     {
         public string  City { get; set; }
     }
