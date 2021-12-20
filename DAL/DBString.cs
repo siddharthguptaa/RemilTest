@@ -90,12 +90,12 @@ namespace DTestAssign.DAL
             return default;
         }
 
-        public static bool InsertDetails(StudentModel sModel)
+        public static int InsertStudentDetails(StudentModel sModel)
         {
             SqlConnection connection = new SqlConnection(conStr);
             try
             {
-                string query = "insert into StudentDetail (Name,DOB,DOJ,Address,City,Mobile) values (@Name,@DOB,@DOJ,@Address,@City,@Mobile)";
+                string query = "insert into StudentDetail (Name,DOB,DOJ,Address,City,Mobile) values (@Name,@DOB,@DOJ,@Address,@City,@Mobile);SELECT SCOPE_IDENTITY();";
                 SqlCommand command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("@Name", sModel.Name);
                 command.Parameters.AddWithValue("@DOB", sModel.DOB);
@@ -103,6 +103,33 @@ namespace DTestAssign.DAL
                 command.Parameters.AddWithValue("@Address", sModel.Address);
                 command.Parameters.AddWithValue("@City", sModel.CityId);
                 command.Parameters.AddWithValue("@Mobile", sModel.Mobile);
+                connection.Open();
+                var resp = command.ExecuteScalar();
+                return Convert.ToInt32(resp);
+            }
+            catch (Exception ex)
+            {
+                connection.Close();
+            }
+            finally
+            {
+                connection.Close();
+            }
+            return default;
+        }
+
+        public static bool InsertStudentMarks(StudentModel sModel)
+        {
+            SqlConnection connection = new SqlConnection(conStr);
+            try
+            {
+                string query = "insert into StudentMarks (Class,College,Obtaining,Obtained,StudentId) values (@Class,@College,@Obtaining,@Obtained,@StudentId);";
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@Class", sModel.Class);
+                command.Parameters.AddWithValue("@College", sModel.Clg);
+                command.Parameters.AddWithValue("@Obtaining", sModel.Obtaining);
+                command.Parameters.AddWithValue("@Obtained", sModel.Obtained);
+                command.Parameters.AddWithValue("@StudentId", sModel.StudentId);
                 connection.Open();
                 var resp = command.ExecuteReader();
                 return true;
@@ -117,7 +144,6 @@ namespace DTestAssign.DAL
             }
             return default;
         }
-
         public static int GetStateId(string name)
         {
             SqlConnection conn = new SqlConnection(conStr);

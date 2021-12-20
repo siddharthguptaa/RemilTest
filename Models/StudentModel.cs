@@ -28,5 +28,11 @@ namespace DTestAssign.Models
         public string City { get; set; }
         [JsonIgnore]
         public int CityId { get; set; }
+        public string Class { get; set; }
+        public string Clg {get; set; }
+        public double Obtained { get; set; }
+        public double Obtaining { get; set; }
+        [JsonIgnore]
+        public int StudentId { get; set; }
     }
 }

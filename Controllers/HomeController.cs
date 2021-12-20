@@ -19,19 +19,29 @@ namespace DTestAssign.Controllers
         public ActionResult Save(StudentModel obj)
         {
             if (!ModelState.IsValid)
-                 return Json(ModelState.Values.FirstOrDefault().Errors.Select(s => s.ErrorMessage.ToString()).FirstOrDefault());
-                if (obj.City == "City")
-                    return Json("Please Select valid City");
-                else
-                {
-                    var stateId = DBString.GetStateId(obj.City);
-                    obj.CityId = stateId;
-                }
-            bool flag = DBString.InsertDetails(obj);
-            if (flag)
-                return Json(new { success = true, message = "Data Inserted Successfully." });
+                return Json(ModelState.Values.FirstOrDefault().Errors.Select(s => s.ErrorMessage.ToString()).FirstOrDefault());
+            if (obj.City == "City")
+                return Json("Please Select valid City");
             else
+            {
+                var stateId = DBString.GetStateId(obj.City);
+                if (stateId != 0)
+                    obj.CityId = stateId;
+                else
+                    return Json("Some issue occured while inserting data,please try again . ");
+            }
+            int inserted = DBString.InsertStudentDetails(obj);
+
+            if (inserted != 0)
+            {
+                obj.StudentId = inserted;
+                var value = DBString.InsertStudentMarks(obj);
+                if (value)
+                    return Json(new { success = true, message = "Data Inserted Successfully." });
+
                 return Json(new { success = false, message = "Some issue occured while inserting data,please try again . " });
+            }
+            return Json(new { success = false, message = "Some issue occured while inserting data,please try again . " });
         }
 
         [HttpGet]

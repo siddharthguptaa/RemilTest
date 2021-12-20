@@ -54,6 +54,22 @@
             <input type="text" name="Country" id="country" class="form-control" placeholder="Country" readonly />
         </div>
 
+
+
+        <table id="tbl" class="table table-bordered table-responsive table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Class</th>
+                    <th>College</th>
+                    <th>Obtaining</th>
+                    <th>Obtained</th>
+                    <th>%</th>
+                    <th width="30px"><img id="plus" title="Click me to add new row" alt="Add Row" src="https://thumbs.dreamstime.com/z/plus-sign-icon-positive-symbol-plus-sign-icon-positive-symbol-zoom-blurred-gradient-design-element-vivid-graphic-flat-icon-117088500.jpg" height="30px" width="60px" style="cursor: pointer; " /></th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
         <div class="form-group">
             <input type="submit" name="Submit" id="submit" value="submit" class="btn btn-primary" />
         </div>
@@ -67,7 +83,13 @@
 <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
 
 <script>
+    
     $(document).ready(function () {
+
+        $('#plus').click(function () {
+            var rows = "<tr>  <td> <div contenteditable id='class'></div></td>   <td><div contenteditable id='clg'></div></td>  <td><div contenteditable id='obtaining'></div></td>   <td><div contenteditable id='obtained'></div></td>   <td id='percent'></td> ";
+            $('tbody').append(rows);
+        });
 
         $("#dob").on('change', function () {
             var dob = $("#dob").val();
@@ -165,11 +187,26 @@
             }
         });
 
+        $('#obtained').click(function () {
+            if ($('#obtained').text != '' && $('#obtaining').text != '') {
+                $('#percent').html($(($('#obtaining').text() / $('#obtained').text()) * 100));
+            }
+            else {
+                alert('Please enter obatained and obatining value');
+            }
+        });
         $("#submit").click(function () {
             if ($('#city').val() == 'City') {
                 alert('Please select valid city.');
                 return;
             }
+            if ($('#obtained').text() != '' && $('#obtaining').text() != '') {
+                var m = $('#obtaining').text();
+                var n = $('#obtained').text();
+                var u = ($('#obtaining').text() / $('#obtained').text())*100;
+                $('#percent').html(u);
+            }
+
             var obj = {};
             obj.Name = $('#studentName').val();
             obj.Address = $('#studentAddress').val();
@@ -178,6 +215,10 @@
             obj.DOJ = $('#doj').val();
             obj.Mobile = $('#mob').val();
             obj.City = $('#city').val();
+            obj.Class = $('#class').text();
+            obj.Clg = $('#clg').text();
+            obj.Obtained = $('#obtained').text();
+            obj.Obtaining = $('#obtaining').text();
             $.ajax({
                 type: "POST",
                 url: "@Url.Action("Save")",
