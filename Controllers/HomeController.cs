@@ -19,9 +19,14 @@ namespace DTestAssign.Controllers
         public ActionResult Save(StudentModel obj)
         {
             if (!ModelState.IsValid)
-               // return Json(ModelState.Values.FirstOrDefault().Errors.Select(s => s.ErrorMessage.ToString()).FirstOrDefault());
-            if (obj.City == "City")
-                return Json("Please Select valid City");
+                 return Json(ModelState.Values.FirstOrDefault().Errors.Select(s => s.ErrorMessage.ToString()).FirstOrDefault());
+                if (obj.City == "City")
+                    return Json("Please Select valid City");
+                else
+                {
+                    var stateId = DBString.GetStateId(obj.City);
+                    obj.CityId = stateId;
+                }
             bool flag = DBString.InsertDetails(obj);
             if (flag)
                 return Json(new { success = true, message = "Data Inserted Successfully." });
@@ -33,7 +38,7 @@ namespace DTestAssign.Controllers
         public ActionResult CityNames()
         {
             var resp = DBString.GetCitiesName();
-            return Json(new {success = true,result = resp},JsonRequestBehavior.AllowGet);
+            return Json(new { success = true, result = resp }, JsonRequestBehavior.AllowGet);
         }
 
         [HttpGet]

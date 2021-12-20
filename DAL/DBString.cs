@@ -105,7 +105,7 @@ namespace DTestAssign.DAL
                 command.Parameters.AddWithValue("@Mobile", sModel.Mobile);
                 connection.Open();
                 var resp = command.ExecuteReader();
-
+                return true;
             }
             catch (Exception ex)
             {
@@ -114,6 +114,33 @@ namespace DTestAssign.DAL
             finally
             {
                 connection.Close();
+            }
+            return default;
+        }
+
+        public static int GetStateId(string name)
+        {
+            SqlConnection conn = new SqlConnection(conStr);
+            DataTable dt = new DataTable();
+            int stateId = 0;
+            try
+            {
+                string query = $"select code from CityMaster where name = '{name}'";
+                SqlCommand command = new SqlCommand(query, conn);
+                conn.Open();
+                SqlDataAdapter adapter = new SqlDataAdapter(command);
+                adapter.Fill(dt);
+                if (dt.Rows.Count > 0)
+                    stateId = Convert.ToInt32(dt.Rows[0]["code"].ToString());
+                return stateId;
+            }
+            catch (Exception ex)
+            {
+                conn.Close();
+            }
+            finally
+            {
+                conn.Close();
             }
             return default;
         }
