@@ -47,6 +47,7 @@ namespace DTestAssign.DAL
             }
             catch(Exception)
             {
+                //check edit 
                 conn.Close();
             }
             finally
