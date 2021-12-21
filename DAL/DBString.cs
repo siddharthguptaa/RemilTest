@@ -170,5 +170,10 @@ namespace DTestAssign.DAL
             }
             return default;
         }
+
+        public static void PullTest(string name)
+        {
+           
+        }
     }
 }
